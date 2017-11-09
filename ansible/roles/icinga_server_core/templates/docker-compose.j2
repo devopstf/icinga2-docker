@@ -1,0 +1,17 @@
+---
+core:
+  image: icinga/core:v1.1
+  environment:
+    - MYSQL_USER=icinga
+    - MYSQL_PASSWORD=icinga
+    - MYSQL_DATABASE=icinga
+  ports:
+    - "4666:5666"
+    - "325:25"
+  extra_hosts:
+    - "srvidor de correos"
+    - "mysql:172.24.56.201"
+  volumes:
+    - ./icinga2/conf.d/:/etc/icinga2/conf.d/
+    - ./icinga2/scripts/:/etc/icinga2/scripts/
+    - ./icinga2/pki/:/etc/icinga2/pki/:Z

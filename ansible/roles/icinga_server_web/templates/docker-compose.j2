@@ -1,0 +1,17 @@
+---
+
+web:
+  image: icinga/web:v1.1
+  ports:
+    - "3080:80"
+    - "636:636"
+  extra_hosts:
+    - "mysql:172.24.56.201"
+    - "core:172.24.56.201"
+    - "servidor correos"
+  environment:
+    - MYSQL_USER=icinga
+    - MYSQL_PASSWORD=icinga
+    - MYSQL_DATABASE=icinga
+  volumes:
+    - ./icingaweb2:/etc/icingaweb2

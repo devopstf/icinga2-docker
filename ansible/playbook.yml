@@ -1,0 +1,34 @@
+---
+
+- hosts: icinga-core
+  become: True
+  vars:
+    - docker_folder: "/projects/lsis/intcon/pr00/workspace/docker" 
+  roles:
+    - icinga_server_conf
+             
+- hosts: icinga-core
+  become: True
+  vars:
+    - docker_folder: "/projects/lsis/intcon/pr00/workspace/docker" 
+  roles:
+    - icinga_server_core
+
+- hosts: icinga-core
+  become: True
+  vars:
+    - docker_folder: "/projects/lsis/intcon/pr00/workspace/docker" 
+  roles:
+    - icinga_server_bbdd 
+
+- hosts: icinga-core
+  become: True
+  vars:
+    - docker_folder: "/projects/lsis/intcon/pr00/workspace/docker" 
+  roles:
+    - icinga_server_web
+     
+- hosts: monitoring-hosts
+  become: True
+  roles:
+    - icinga_client

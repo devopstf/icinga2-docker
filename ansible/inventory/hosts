@@ -1,0 +1,13 @@
+[monitoring-hosts]
+localhost ansible_connection=local
+
+[icinga-core]
+localhost ansible_connection=local
+
+
+[icinga-web]
+localhost ansible_connection=local
+
+
+[icinga-bbdd]
+localhost ansible_connection=local

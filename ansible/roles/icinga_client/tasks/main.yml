@@ -1,0 +1,102 @@
+---
+- name: Install gcc
+  yum:
+    name: gcc
+    
+- name: Install openssl
+  yum:
+    name: openssl
+
+- name: Install openssl-devel
+  yum:
+    name: openssl-devel
+    
+- name: download nrpe
+  get_url:
+    url: http://sourceforge.net/projects/nagios/files/nrpe-2.x/nrpe-2.15/nrpe-2.15.tar.gz
+    dest: /tmp
+    mode: 0440
+ 
+- name: Unarchive nrpe
+  unarchive:
+    src: /tmp/nrpe-2.15.tar.gz
+    dest: /tmp
+    remote_src: True
+    
+
+- name: Configuration
+  shell:
+    cd /tmp/nrpe-2.15 && ./configure --enable-command-args
+         
+- name: Configuration
+  shell: 
+    cd /tmp/nrpe-2.15 && make distclean 
+      
+- name: Configuration
+  shell:
+    cd /tmp/nrpe-2.15 && ./configure --enable-command-args
+      
+  
+- name: Installation
+  shell:
+    cd /tmp/nrpe-2.15 && make all
+     
+- name: Add nagios user
+  user:
+    name: nagios
+    comment: "Nagios user"
+    groups: nagios,wheel
+      
+- name: Daemon-config
+  shell:
+    cd /tmp/nrpe-2.15 && make install-daemon-config  
+
+- name: Daemon-install
+  shell:
+    cd /tmp/nrpe-2.15 && make install-daemon 
+    
+- name: Install xinetd
+  yum:
+    name: xinetd
+    
+- name: Setting
+  shell:
+    'echo "nrpe 5666/tcp # nrpe" >> /etc/services'
+      
+- name: Daemon-install
+  shell:
+    cd /tmp/nrpe-2.15 &&  make install-xinetd 
+ 
+- name: Install nagios-plugin
+  yum:
+    name: nagios-plugins-all
+    
+- name: copy check-yum-update.pl
+  copy:
+    src: extra-checks/check-yum-update.pl
+    dest: /usr/lib64/nagios/plugins/check-yum-update.pl
+    mode: 0755 
+      
+- name: copy nrpe-xinetd
+  copy:
+    src: nrpe-xinetd
+    dest: /etc/xinetd.d/nrpe
+    mode: 0644
+
+- name: copy nrpe.cfg
+  copy:
+    src: nrpe.cfg
+    dest: /usr/local/nagios/etc/nrpe.cfg
+    mode: 0644
+    
+- name: Copy plugin check_VG
+  copy:
+    src:  extra-checks/check_vg_size2
+    dest: /usr/lib64/nagios/plugins/check_vg_size2
+    mode: 0755
+          
+- name: Restart xinetd service
+  service:
+    name: xinetd
+    state: restarted
+    

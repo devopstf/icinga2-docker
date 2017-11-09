@@ -1,0 +1,9 @@
+[Unit]
+Description=icingaCore Service  
+After=docker.service  
+Requires=docker.service
+
+[Service]
+ExecStartPre=-/usr/local/bin/docker-compose -f {{ docker_folder }}/core/docker-compose.yml down
+ExecStart=/usr/local/bin/docker-compose -f {{ docker_folder }}/core/docker-compose.yml up
+ExecStop=/usr/local/bin/docker-compose -f {{ docker_folder }}/core/docker-compose.yml stop  

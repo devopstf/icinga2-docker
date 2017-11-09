@@ -1,0 +1,17 @@
+---
+
+- name: Generate Service's template
+  template:
+    src: icingaWeb.service.j2
+    dest: /etc/systemd/system/icingaWeb.service
+
+- name: Generate Service's template
+  template:
+    src: docker-compose.j2
+    dest: "{{ docker_folder }}/web/docker-compose.yml"
+    
+- name: restart icinga-web service
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: icingaWeb

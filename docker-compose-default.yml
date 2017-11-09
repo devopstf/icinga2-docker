@@ -1,0 +1,52 @@
+core:
+  build: ./core
+  environment:
+    - MYSQL_USER=icinga
+    - MYSQL_PASSWORD=icinga
+    - MYSQL_DATABASE=icinga
+  ports:
+    - "5666:5666"
+    - "325:25"
+  extra_hosts:
+    - "host servidor correos"
+    - "mysql:ip"
+    
+  volumes:
+    #- ./volumes/etc/icinga2:/etc/icinga2
+    - ./content/etc/icinga2/conf.d/:/etc/icinga2/conf.d/
+web:
+  build: ./web
+  ports:
+    - "3080:80"
+    - "636:636"
+  extra_hosts:
+    - "mysql:ip"
+  environment:
+    - MYSQL_USER=icinga
+    - MYSQL_PASSWORD=icinga
+    - MYSQL_DATABASE=icinga
+  volumes:
+    #- ./volumes/etc/icingaweb2:/etc/icingaweb2
+    - ./content/etc/icingaweb2:/etc/icingaweb2
+
+mysql:
+  image: mariadb
+  ports:
+    - "3306:3306"
+  environment:
+    - MYSQL_ROOT_PASSWORD=secret
+    - MYSQL_USER=icinga
+    - MYSQL_PASSWORD=icinga
+    - MYSQL_DATABASE=icinga
+    
+mysql:
+  image: mariadb
+  ports:
+    - "3306:3306"
+  environment:
+    - MYSQL_ROOT_PASSWORD=secret
+    - MYSQL_USER=icinga
+    - MYSQL_PASSWORD=icinga
+    - MYSQL_DATABASE=icinga
+  volumes:
+    - ./volumes/var/lib/mysql:/var/lib/mysql

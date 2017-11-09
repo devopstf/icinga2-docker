@@ -1,0 +1,13 @@
+--- 
+
+mysql:
+  image: icinga/mariadb
+  ports:
+    - "3306:3306"
+  environment:
+    - MYSQL_ROOT_PASSWORD=secret
+    - MYSQL_USER=icinga
+    - MYSQL_PASSWORD=icinga
+    - MYSQL_DATABASE=icinga
+  volumes:
+    - ./data:/var/lib/mysql

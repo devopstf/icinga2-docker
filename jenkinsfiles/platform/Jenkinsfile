@@ -1,0 +1,39 @@
+pipeline {
+	agent { label 'ansible&&corporativa' }
+    environment { 
+        devopsFolder = '.'
+    }
+
+	stages {	
+	    stage ('checkout') {
+			steps {
+				checkout scm
+			}
+		}
+		stage('Up-Icinga') {
+		  steps {
+		  	ansiColor('xterm') {
+			ansiblePlaybook(
+		        playbook: devopsFolder + '/ansible/playbook.yml',
+				credentialsId: 'devops-infra-jenkins',
+		        inventory: devopsFolder + '/ansible/inventory/hosts',
+		        colorized: true)
+		    }
+		  }
+		}
+	}
+	post {
+		success {
+		  echo "success"
+		}
+		failure {
+			emailext (
+			   subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+			   body: """<p>FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
+			     <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>""",
+			   mimeType: 'text/html',
+			   recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+			 )
+		}
+	}
+}
